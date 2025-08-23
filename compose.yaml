@@ -8,6 +8,12 @@ services: # docker compose expects
       - 8080:8000
     # --reload se asegura de que se actualicen los cambios de python en ejecución si los hubiere, pero es mejor usar restart en develop
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+    environment:
+      - PORT=8000
+      - MY_PROJECT=Hello World
+    env_file:
+      - .env.sample
     # los volumenes no se preocupan de los .dockerignore y te muestran todos los archivos aunque esten dentro del ignore
     # volumes:
     #   - ./backend/src:/app
@@ -20,7 +26,7 @@ services: # docker compose expects
           action: rebuild
           # en lugar de usar volumnenes se puede usar sync aqui para guardar las cosas pero solo sirve para archivos ya existentes
         - path: backend/src
-          action: sync
+          action: sync+restart
           target: /app
 
   static_html: # custom key name
