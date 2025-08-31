@@ -7,7 +7,7 @@ services: # docker compose expects
     ports: 
       - 8080:8000
     # --reload se asegura de que se actualicen los cambios de python en ejecución si los hubiere, pero es mejor usar restart en develop
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 # --reload
 
     environment:
       - PORT=8000
