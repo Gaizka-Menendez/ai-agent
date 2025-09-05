@@ -1,5 +1,4 @@
 services: # docker compose expects
-
   backend: # custom key name
     build:
       context: ./backend
@@ -12,22 +11,37 @@ services: # docker compose expects
     environment:
       - PORT=8000
       - MY_PROJECT=Hello World
+
     env_file:
-      - .env.sample
+      - .env.
+
     # los volumenes no se preocupan de los .dockerignore y te muestran todos los archivos aunque esten dentro del ignore
-    # volumes:
-    #   - ./backend/src:/app
+    volumes:
+      - ./backend/src:/app
     # develop nos ayuda a que si algo cambia dentro de nuestro backend, por ejemplo requirements.txt que ejecute rebuild con cada cambio una vez guardado
     develop:
       watch:
-        - path: backend/requirements.txt
-          action: rebuild
-        - path: backend/Dockerfile
-          action: rebuild
+        - action: rebuild
+          path: backend/requirements.txt
+        - action: rebuild
+          path: backend/Dockerfile 
           # en lugar de usar volumnenes se puede usar sync aqui para guardar las cosas pero solo sirve para archivos ya existentes
-        - path: backend/src
-          action: sync+restart
+        - action: sync+restart
+          path: backend/src
           target: /app
+
+
+  # DATABASE_URL=postgres+psycopg://username:password@dbhost:dbport/dbname
+  db_service:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=db-password
+      - POSTGRES_DB=mydb
+    volumes: 
+      - dc_managed_db_volume:/var/lib/postgresql/data
 
   static_html: # custom key name
     build:
@@ -39,4 +53,9 @@ services: # docker compose expects
     command: python -m http.server 8000
     volumes:
       - ./static_html/src:/app
+
+# el problema de indicar los parametros de la conexión a la DB en producción aqui en el compose es que no se encarga de la persintencia
+# de los managed_volumes y tendriamos que realizar docker compose dowm -v
+volumes:
+  dc_managed_db_volume:
   
