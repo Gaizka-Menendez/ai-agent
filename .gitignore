@@ -1,3 +1,5 @@
 Scripts/
 __pycache__/
 .env
+pyvenv.cfg
+.env.sample-db
