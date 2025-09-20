@@ -14,7 +14,8 @@ if DATABASE_URL == "":
 
 engine = sqlmodel.create_engine(DATABASE_URL)
 
-# database models 
+# database models
+# does not creates database migrations or changes
 def init_db():
     print("Creating the database tables ....")
     SQLModel.metadata.create_all(engine)

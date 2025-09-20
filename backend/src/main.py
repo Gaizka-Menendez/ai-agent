@@ -13,6 +13,9 @@ async def lifespan(app: FastAPI):
     # after app startup
 
 app = FastAPI(lifespan=lifespan)
+
+# esta línea lo que permite es añadir routers, de forma que todo lo que tenga que ver con chats se encuentre en la ruta api/chats
+# Mantiene la aplicación modular y ordenada además de permitirnos reutilizar y escalar
 app.include_router(chat_router, prefix="/api/chats")
 
 @app.get("/")

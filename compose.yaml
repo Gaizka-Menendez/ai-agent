@@ -29,6 +29,9 @@ services: # docker compose expects
         - action: sync+restart
           path: backend/src
           target: /app
+    depends_on:
+      db_service:
+        condition: service_healthy
 
 
   # DATABASE_URL=postgres+psycopg://username:password@dbhost:dbport/dbname
@@ -42,18 +45,25 @@ services: # docker compose expects
       - POSTGRES_DB=mydb
     volumes: 
       - dc_managed_db_volume:/var/lib/postgresql/data
+    healthcheck:
+    # docker pregunta si la BBDD esta lista con (pg_isready), -U dbuser usuarion con el que prueba y -d mydb base de datos a la que conectarse, si no funciona Exit 1
+      test: ["CMD-SHELL", "pg_isready -U dbuser -d mydb || exit 1"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+      start_period: 5s
 
-  static_html: # custom key name
-    build:
-      context: ./static_html
-      dockerfile: static.Dockerfile
-    ports: 
-      # - 8000:8000
-      # - 3000:8000
-      - 8081:8000
-    command: python -m http.server 8000
-    volumes:
-      - ./static_html/src:/app
+  # static_html: # custom key name
+  #   build:
+  #     context: ./static_html
+  #     dockerfile: static.Dockerfile
+  #   ports: 
+  #     # - 8000:8000
+  #     # - 3000:8000
+  #     - 8081:8000
+  #   command: python -m http.server 8000
+  #   volumes:
+  #     - ./static_html/src:/app
 
 # el problema de indicar los parametros de la conexión a la DB en producción aqui en el compose es que no se encarga de la persintencia
 # de los managed_volumes y tendriamos que realizar docker compose dowm -v
