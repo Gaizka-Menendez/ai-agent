@@ -6,3 +6,4 @@ psycopg[binary] # postgres with python
 SQLAlchemy
 langchain
 langchain-openai
+langgraph

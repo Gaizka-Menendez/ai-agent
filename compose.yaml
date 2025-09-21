@@ -26,9 +26,9 @@ services: # docker compose expects
         - action: rebuild
           path: backend/Dockerfile 
           # en lugar de usar volumnenes se puede usar sync aqui para guardar las cosas pero solo sirve para archivos ya existentes
-        - action: sync+restart
+        - action: restart
           path: backend/src
-          target: /app
+          # target: /app
     depends_on:
       db_service:
         condition: service_healthy
