@@ -13,11 +13,11 @@ services: # docker compose expects
       - MY_PROJECT=Hello World
 
     env_file:
-      - .env.
+      - .env
 
     # los volumenes no se preocupan de los .dockerignore y te muestran todos los archivos aunque esten dentro del ignore
-    volumes:
-      - ./backend/src:/app
+    # volumes:
+    #   - ./backend/src:/app
     # develop nos ayuda a que si algo cambia dentro de nuestro backend, por ejemplo requirements.txt que ejecute rebuild con cada cambio una vez guardado
     develop:
       watch:
